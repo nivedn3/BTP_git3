@@ -6,7 +6,7 @@ from glob import glob
 import os
 import cv2
 from align import detect_face
-from models.cnn import simple_CNN
+from models.cnn import mini_XCEPTION
 import numpy as np
 
 
@@ -147,11 +147,11 @@ for ite in range(20):
   input_shape = (150,150,3)
   num_classes = 2
 
-  file = open('/home/ubuntu/BTP_git/log3.txt','a')
+  file = open('/home/ubuntu/BTP_git/log4.txt','a')
 
-  model = simple_CNN(input_shape, num_classes)
+  model = mini_XCEPTION(input_shape, num_classes)
   if ite:
-    model.load_weights("/home/ubuntu/BTP_git/weights/test3/"+"model_%d.h5"%(ite-1))
+    model.load_weights("/home/ubuntu/BTP_git/weights/test4/"+"model_%d.h5"%(ite-1))
   model.compile(loss='binary_crossentropy',
                 optimizer='adam',
                 metrics=['accuracy'])
@@ -163,4 +163,4 @@ for ite in range(20):
   file.write("iter"+ str(ite) + "\n")
   file.write("acc"+str(test_acc)+ "\n")
   file.write("*****************"+ "\n")
-  model.save_weights("/home/ubuntu/BTP_git/weights/test3/"+"model_%d.h5"%ite)
+  model.save_weights("/home/ubuntu/BTP_git/weights/test4/"+"model_%d.h5"%ite)
