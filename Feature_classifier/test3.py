@@ -156,7 +156,7 @@ for ite in range(20):
                 optimizer='adam',
                 metrics=['accuracy'])
 
-  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=3)
+  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
 
   test_acc = model.evaluate(imgs_d_test,final_label_test)
   print(test_acc)
