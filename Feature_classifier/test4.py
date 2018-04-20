@@ -77,6 +77,7 @@ for ite in range(20):
     if labels_train_moustache[i] == 1:
 
       final_label_train.append([1,0])
+      final_label_train.append([1,0])
     
     else:
 
@@ -103,10 +104,18 @@ for ite in range(20):
 
   imgs_train = []
 
-  for i in data_train:
+  for i,v in enumerate(data_train):
 
     img = cv2.imread(i)
-    imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
+    if labels_train_moustache[i+2] == 1: 
+      
+      flip = cv2.flip(src=img, flipCode=1)
+      imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
+
+    else:
+
+      imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
   imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
 
