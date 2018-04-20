@@ -18,7 +18,7 @@ for ite in range(20):
   print("*************************************")
   
 
-  data_raw = glob(os.path.join('/home/ubuntu/DCGAN-tensorflow/data/celebA','*.jpg'))
+  data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
   data_train = sorted(data_raw)[ite*10000:10000 + ite*10000]
   data_test = sorted(data_raw)[200000:2002599]
 
@@ -106,8 +106,9 @@ for ite in range(20):
 
   for i,v in enumerate(data_train):
 
-    img = cv2.imread(i)
-    if labels_train_moustache[i+2] == 1: 
+    img = cv2.imread(v)
+    print v
+    if labels_train_moustache[i] == 1: 
       
       flip = cv2.flip(src=img, flipCode=1)
       imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
@@ -124,7 +125,7 @@ for ite in range(20):
 
   for i in data_test:
 
-      img = cv2.imread(i)
+      img = cv2.imread(v)
       imgs_test.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
   imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)

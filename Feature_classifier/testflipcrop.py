@@ -6,7 +6,7 @@ from glob import glob
 import os
 import cv2
 from align import detect_face
-from models.cnn import simple_CNN
+from models.cnn import mini_XCEPTION
 import numpy as np
 
 
@@ -78,9 +78,16 @@ for ite in range(20):
 
       final_label_train.append([1,0])
       final_label_train.append([1,0])
+      final_label_train.append([1,0])
+      final_label_train.append([1,0])
+      final_label_train.append([1,0])
+      final_label_train.append([1,0])
+      final_label_train.append([1,0])
+      final_label_train.append([1,0])
     
     else:
 
+      final_label_train.append([0,1])
       final_label_train.append([0,1])
 
 
@@ -107,14 +114,31 @@ for ite in range(20):
   for i,v in enumerate(data_train):
 
     img = cv2.imread(v)
+    print v
     if labels_train_moustache[i] == 1: 
       
+      t = img.shape
       flip = cv2.flip(src=img, flipCode=1)
+      crp = img[0:t[0]*4/5,0:t[1]*4/5]
+      crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
+      crp3 = img[0:t[0],0:t[1]*4/5]
+      crp4 = img[0:t[0]*4/5,0:t[1]]
+      crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
+      gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
       imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
       imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
 
     else:
 
+      gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+      imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
       imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
   imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
@@ -124,7 +148,7 @@ for ite in range(20):
 
   for i in data_test:
 
-      img = cv2.imread(i)
+      img = cv2.imread(v)
       imgs_test.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
   imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
@@ -156,11 +180,11 @@ for ite in range(20):
   input_shape = (150,150,3)
   num_classes = 2
 
-  file = open('/home/ubuntu/BTP_git3/log5.txt','a')
+  file = open('/home/ubuntu/BTP_git3/logfc.txt','a')
 
-  model = simple_CNN(input_shape, num_classes)
+  model = mini_XCEPTION(input_shape, num_classes)
   if ite:
-    model.load_weights("/home/ubuntu/BTP_git3/weights/test5/"+"model_%d.h5"%(ite-1))
+    model.load_weights("/home/ubuntu/BTP_git3/weights/testfc/"+"model_%d.h5"%(ite-1))
   model.compile(loss='binary_crossentropy',
                 optimizer='adam',
                 metrics=['accuracy'])
@@ -172,4 +196,4 @@ for ite in range(20):
   file.write("iter"+ str(ite) + "\n")
   file.write("acc"+str(test_acc)+ "\n")
   file.write("*****************"+ "\n")
-  model.save_weights("/home/ubuntu/BTP_git3/weights/test5/"+"model_%d.h5"%ite)
+  model.save_weights("/home/ubuntu/BTP_git3/weights/testfc/"+"model_%d.h5"%ite)
