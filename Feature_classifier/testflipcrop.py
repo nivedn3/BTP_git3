@@ -189,6 +189,11 @@ for ite in range(20):
                 optimizer='adam',
                 metrics=['accuracy'])
 
+
+  s = np.arange(final_label_train.shape[0])
+  final_label_train = final_label_train[s]
+  imgs_d_train = imgs_d_train[s]
+
   model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
 
   test_acc = model.evaluate(imgs_d_test,final_label_test)
