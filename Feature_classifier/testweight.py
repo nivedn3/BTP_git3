@@ -18,7 +18,7 @@ for ite in range(20):
   print("*************************************")
   
 
-  data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
+  data_raw = glob(os.path.join('/home/ubuntu/DCGAN-tensorflow/data/celebA','*.jpg'))
   data_train = sorted(data_raw)[ite*10000:10000 + ite*10000]
   data_test = sorted(data_raw)[200000:2002599]
 
