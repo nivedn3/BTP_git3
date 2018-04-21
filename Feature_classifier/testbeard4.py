@@ -157,11 +157,11 @@ for ite in range(20):
   input_shape = (150,150,3)
   num_classes = 2
 
-  file = open('/home/ubuntu/BTP_git3/log4.txt','a')
+  file = open('/home/ubuntu/BTP_git3/logbeard4.txt','a')
 
   model = mini_XCEPTION(input_shape, num_classes)
   if ite:
-    model.load_weights("/home/ubuntu/BTP_git3/weights/test4/"+"model_%d.h5"%(ite-1))
+    model.load_weights("/home/ubuntu/BTP_git3/weights/testbeard4/"+"model_%d.h5"%(ite-1))
   model.compile(loss='binary_crossentropy',
                 optimizer='adam',
                 metrics=['accuracy'])
@@ -169,7 +169,7 @@ for ite in range(20):
   s = np.arange(final_label_train.shape[0])
   final_label_train = final_label_train[s]
   imgs_d_train = imgs_d_train[s]
-  
+
   model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
 
   test_acc = model.evaluate(imgs_d_test,final_label_test)
@@ -177,4 +177,4 @@ for ite in range(20):
   file.write("iter"+ str(ite) + "\n")
   file.write("acc"+str(test_acc)+ "\n")
   file.write("*****************"+ "\n")
-  model.save_weights("/home/ubuntu/BTP_git3/weights/test4/"+"model_%d.h5"%ite)
+  model.save_weights("/home/ubuntu/BTP_git3/weights/testbeard4/"+"model_%d.h5"%ite)
