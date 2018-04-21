@@ -51,7 +51,7 @@ for ite in range(20):
 
 
 
-  labels_test = labels_test[200002:200601]
+  labels_test = labels_test[200002:202601]
   labels_test_genders = [int(i[21]) for i in labels_test]
   labels_test_moustaches = [int(i[23]) for i in labels_test]
   labels_test_glasss = [int(i[16]) for i in labels_test]
@@ -106,7 +106,6 @@ for ite in range(20):
   for i,v in enumerate(data_train):
 
     img = cv2.imread(v)
-    print v
     if labels_train_no_beard[i] == 0: 
       
       flip = cv2.flip(src=img, flipCode=1)

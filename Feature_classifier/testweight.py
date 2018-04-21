@@ -168,20 +168,21 @@ for ite in range(20):
   input_shape = (150,150,3)
   num_classes = 2
 
-  file = open('/home/ubuntu/BTP_git3/log5.txt','a')
+  file = open('/home/ubuntu/BTP_git3/log5weight.txt','a')
 
   model = simple_CNN(input_shape, num_classes)
   if ite:
-    model.load_weights("/home/ubuntu/BTP_git3/weights/test5/"+"model_%d.h5"%(ite-1))
+    model.load_weights("/home/ubuntu/BTP_git3/weights/test5weight/"+"model_%d.h5"%(ite-1))
   model.compile(loss='binary_crossentropy',
                 optimizer='adam',
                 metrics=['accuracy'])
 
-  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
+  class_weight = {0:1,1:23}
+  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5,class_weight = class_weight)
 
   test_acc = model.evaluate(imgs_d_test,final_label_test)
   print(test_acc)
   file.write("iter"+ str(ite) + "\n")
   file.write("acc"+str(test_acc)+ "\n")
   file.write("*****************"+ "\n")
-  model.save_weights("/home/ubuntu/BTP_git3/weights/test5/"+"model_%d.h5"%ite)
+  model.save_weights("/home/ubuntu/BTP_git3/weights/test5weight/"+"model_%d.h5"%ite)
