@@ -78,11 +78,11 @@ for ite in range(20):
 
       final_label_train.append([1,0])
       final_label_train.append([1,0])
-      final_label_train.append([1,0])
+      #final_label_train.append([1,0])
     
     else:
 
-      final_label_train.append([0,1])
+      #final_label_train.append([0,1])
       final_label_train.append([0,1])
 
 
@@ -122,11 +122,11 @@ for ite in range(20):
       #imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
       #imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
       #imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
     else:
 
-      gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-      imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
+      #gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+      #imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
       imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
   imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
