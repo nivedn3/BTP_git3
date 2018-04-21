@@ -6,7 +6,7 @@ from glob import glob
 import os
 import cv2
 from align import detect_face
-from models.cnn import simple_CNN
+from models.cnn import mini_XCEPTION
 import numpy as np
 
 
@@ -18,9 +18,9 @@ for ite in range(20):
   print("*************************************")
   
 
-  data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
-  data_train = sorted(data_raw)[ite*100:100 + ite*100]
-  data_test = sorted(data_raw)[200000:2000599]
+  data_raw = glob(os.path.join('/home/ubuntu/DCGAN-tensorflow/data/celebA','*.jpg'))
+  data_train = sorted(data_raw)[ite*10000:10000 + ite*10000]
+  data_test = sorted(data_raw)[200000:2002599]
 
 
   label_file = open('list_attr_celeba.txt','r')
@@ -32,7 +32,7 @@ for ite in range(20):
     labels_train.append(label)
     labels_test.append(label)
 
-  labels_train = labels_train[2 + ite*100:102 + ite*100]
+  labels_train = labels_train[2 + ite*10000:10002 + ite*10000]
   labels_train_gender = [int(i[21]) for i in labels_train]
   labels_train_moustache = [int(i[23]) for i in labels_train]
   labels_train_glass = [int(i[16]) for i in labels_train]
@@ -51,7 +51,7 @@ for ite in range(20):
 
 
 
-  labels_test = labels_test[200002:200601]
+  labels_test = labels_test[200002:202601]
   labels_test_genders = [int(i[21]) for i in labels_test]
   labels_test_moustaches = [int(i[23]) for i in labels_test]
   labels_test_glasss = [int(i[16]) for i in labels_test]
@@ -74,7 +74,7 @@ for ite in range(20):
   final_label_train = []
   for i,v in enumerate(labels_train_gender):
 
-    if labels_train_moustache[i] == 1:
+    if labels_train_no_beard[i] == 1:
 
       final_label_train.append([1,0])
       final_label_train.append([1,0])
@@ -90,7 +90,7 @@ for ite in range(20):
   final_label_test = []
   for i,v in enumerate(labels_test_genders):
 
-    if labels_test_moustaches[i] == 1:
+    if labels_test_no_beards[i] == 1:
 
       final_label_test.append([1,0])
     
@@ -107,29 +107,15 @@ for ite in range(20):
   for i,v in enumerate(data_train):
 
     img = cv2.imread(v)
+    print v
     if labels_train_moustache[i] == 1: 
       
-      t = img.shape
       flip = cv2.flip(src=img, flipCode=1)
-      crp = img[0:t[0]*4/5,0:t[1]*4/5]
-      crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
-      crp3 = img[0:t[0],0:t[1]*4/5]
-      crp4 = img[0:t[0]*4/5,0:t[1]]
-      crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
-      gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
       imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
       imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
+
     else:
 
-      gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-      imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
       imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
   imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
@@ -139,7 +125,7 @@ for ite in range(20):
 
   for i in data_test:
 
-      img = cv2.imread(i)
+      img = cv2.imread(v)
       imgs_test.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
   imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
@@ -171,15 +157,19 @@ for ite in range(20):
   input_shape = (150,150,3)
   num_classes = 2
 
-  file = open('/home/ubuntu/BTP_git3/log5.txt','a')
+  file = open('/home/ubuntu/BTP_git3/log4.txt','a')
 
-  model = simple_CNN(input_shape, num_classes)
+  model = mini_XCEPTION(input_shape, num_classes)
   if ite:
-    model.load_weights("/home/ubuntu/BTP_git3/weights/test5/"+"model_%d.h5"%(ite-1))
+    model.load_weights("/home/ubuntu/BTP_git3/weights/test4/"+"model_%d.h5"%(ite-1))
   model.compile(loss='binary_crossentropy',
                 optimizer='adam',
                 metrics=['accuracy'])
 
+  s = np.arange(final_label_train.shape[0])
+  final_label_train = final_label_train[s]
+  imgs_d_train = imgs_d_train[s]
+  
   model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
 
   test_acc = model.evaluate(imgs_d_test,final_label_test)
@@ -187,4 +177,4 @@ for ite in range(20):
   file.write("iter"+ str(ite) + "\n")
   file.write("acc"+str(test_acc)+ "\n")
   file.write("*****************"+ "\n")
-  model.save_weights("/home/ubuntu/BTP_git3/weights/test5/"+"model_%d.h5"%ite)
+  model.save_weights("/home/ubuntu/BTP_git3/weights/test4/"+"model_%d.h5"%ite)

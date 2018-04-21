@@ -18,9 +18,9 @@ for ite in range(20):
   print("*************************************")
   
 
-  data_raw = glob(os.path.join('/home/ubuntu/DCGAN-tensorflow/data/celebA','*.jpg'))
-  data_train = sorted(data_raw)[ite*10000:10000 + ite*10000]
-  data_test = sorted(data_raw)[200000:2002599]
+  data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
+  data_train = sorted(data_raw)[ite*100:100 + ite*100]
+  data_test = sorted(data_raw)[200000:2000599]
 
 
   label_file = open('list_attr_celeba.txt','r')
@@ -32,7 +32,7 @@ for ite in range(20):
     labels_train.append(label)
     labels_test.append(label)
 
-  labels_train = labels_train[2 + ite*10000:10002 + ite*10000]
+  labels_train = labels_train[2 + ite*100:102 + ite*100]
   labels_train_gender = [int(i[21]) for i in labels_train]
   labels_train_moustache = [int(i[23]) for i in labels_train]
   labels_train_glass = [int(i[16]) for i in labels_train]
@@ -51,7 +51,7 @@ for ite in range(20):
 
 
 
-  labels_test = labels_test[200002:202601]
+  labels_test = labels_test[200002:200601]
   labels_test_genders = [int(i[21]) for i in labels_test]
   labels_test_moustaches = [int(i[23]) for i in labels_test]
   labels_test_glasss = [int(i[16]) for i in labels_test]
@@ -128,12 +128,12 @@ for ite in range(20):
 
       imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
       imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(gray,(150,150)),axis = 0).astype(np.float32))
 
     else:
 
@@ -194,7 +194,7 @@ for ite in range(20):
   final_label_train = final_label_train[s]
   imgs_d_train = imgs_d_train[s]
 
-  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
+  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=7)
 
   test_acc = model.evaluate(imgs_d_test,final_label_test)
   print(test_acc)
