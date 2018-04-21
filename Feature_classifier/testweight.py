@@ -19,8 +19,8 @@ for ite in range(20):
   
 
   data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
-  data_train = sorted(data_raw)[ite*100:100 + ite*100]
-  data_test = sorted(data_raw)[200000:2000599]
+  data_train = sorted(data_raw)[ite*10000:10000 + ite*10000]
+  data_test = sorted(data_raw)[200000:2002599]
 
 
   label_file = open('list_attr_celeba.txt','r')
@@ -32,7 +32,7 @@ for ite in range(20):
     labels_train.append(label)
     labels_test.append(label)
 
-  labels_train = labels_train[2 + ite*100:102 + ite*100]
+  labels_train = labels_train[2 + ite*10000:10002 + ite*10000]
   labels_train_gender = [int(i[21]) for i in labels_train]
   labels_train_moustache = [int(i[23]) for i in labels_train]
   labels_train_glass = [int(i[16]) for i in labels_train]
@@ -51,7 +51,7 @@ for ite in range(20):
 
 
 
-  labels_test = labels_test[200002:200601]
+  labels_test = labels_test[200002:202601]
   labels_test_genders = [int(i[21]) for i in labels_test]
   labels_test_moustaches = [int(i[23]) for i in labels_test]
   labels_test_glasss = [int(i[16]) for i in labels_test]
