@@ -77,14 +77,14 @@ labels_test_no_beards[labels_test_no_beards < 0] = 0
 final_label_train = []
 for i,v in enumerate(labels_train_gender):
 
-	if labels_train_no_beard[i] == 0:
+	if labels_train_moustache[i] == 1:
 	  print i
-	  final_label_train.append([0,1])
-	  final_label_train.append([0,1])
+	  final_label_train.append([1,0])
+	  final_label_train.append([1,0])
 
 	else:
 
-	  final_label_train.append([1,0])
+	  final_label_train.append([0,1])
 
 
 final_label_train = np.array(final_label_train)
@@ -93,7 +93,7 @@ final_label_train = np.array(final_label_train)
 final_label_test = []
 for i,v in enumerate(labels_test_genders):
 
-	if labels_test_no_beards[i] == 1:
+	if labels_test_moustaches[i] == 1:
 
 	  final_label_test.append([1,0])
 
@@ -109,15 +109,15 @@ imgs_train = []
 for i,v in enumerate(data_train):
 
 	img = cv2.imread(v)
-	if labels_train_no_beard[i] == 0: 
+	if labels_train_moustache[i] == 1: 
 	  
 	  flip = cv2.flip(src=img, flipCode=1)
-	  imgs_train.append(np.expand_dims(cv2.resize(img,(224,224)),axis = 0).astype(np.float32))
-	  imgs_train.append(np.expand_dims(cv2.resize(flip,(224,224)),axis = 0).astype(np.float32))
+	  imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
+	  imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
 
 	else:
 
-	  imgs_train.append(np.expand_dims(cv2.resize(img,(224,224)),axis = 0).astype(np.float32))
+	  imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
 imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
 
@@ -126,7 +126,7 @@ imgs_test = []
 for i in data_test:
 
   img = cv2.imread(v)
-  imgs_test.append(np.expand_dims(cv2.resize(img,(224,224)),axis = 0).astype(np.float32))
+  imgs_test.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
 
 imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
 
