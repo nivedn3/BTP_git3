@@ -27,7 +27,6 @@ print("*************************************")
 data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
 data_train = sorted(data_raw)[0:200000]
 data_test = sorted(data_raw)[200000:202599]
-print len(data_test)
 
 label_file = open('list_attr_celeba.txt','r')
 labels_train = []
@@ -81,7 +80,6 @@ final_label_train = []
 for i,v in enumerate(labels_train_gender):
 
 	if labels_train_no_beard[i] == 0:
-	  print i
 	  final_label_train.append([0,1])
 	  final_label_train.append([0,1])
 
