@@ -174,13 +174,13 @@ train_acc=hist.history['acc']
 val_acc=hist.history['val_acc']
 
 file = open('/home/ubuntu/BTP_git3/resnet.txt','a')
-file.write(train_loss)
+file.write(str(train_loss))
 file.write("\n\n\n\n\n\n")
-file.write(val_loss)
+file.write(str(val_loss))
 file.write("\n\n\n\n\n\n")
-file.write(train_acc)
+file.write(str(train_acc))
 file.write("\n\n\n\n\n\n")
-file.write(val_acc)
+file.write(str(val_acc))
 file.write("\n\n\n\n\n\n")
 file.close()
 model.save_weights("/home/ubuntu/BTP_git3/weights/resnet/model.h5")

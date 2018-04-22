@@ -7,18 +7,15 @@ import os
 import cv2
 from keras.layers import Input
 from keras.applications.resnet50 import ResNet50
-from keras.applications.vgg19 import VGG19
 from keras.layers import GlobalAveragePooling2D, Dense, Dropout,Activation,Flatten
 from keras.models import Model
 import time
-
 from align import detect_face
 from models.cnn import mini_XCEPTION
 import numpy as np
 
 
 ite = 0
-
 
 print("*************************************")
 print("iteration numeber",ite)
@@ -27,6 +24,7 @@ print("*************************************")
 data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
 data_train = sorted(data_raw)[0:200000]
 data_test = sorted(data_raw)[200000:202599]
+print len(data_test)
 
 label_file = open('list_attr_celeba.txt','r')
 labels_train = []
@@ -80,6 +78,7 @@ final_label_train = []
 for i,v in enumerate(labels_train_gender):
 
 	if labels_train_no_beard[i] == 0:
+	  print i
 	  final_label_train.append([0,1])
 	  final_label_train.append([0,1])
 
@@ -131,37 +130,21 @@ for i in data_test:
 
 imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
 
-image_input = Input(shape=(224, 224, 3))
-
-model = VGG19(weights='imagenet',include_top=False)
-model.summary()
-last_layer = model.output
-# add a global spatial average pooling layer
-x = GlobalAveragePooling2D()(last_layer)
-# add fully-connected & dropout layers
-x = Dense(512, activation='relu',name='fc-1')(x)
-x = Dropout(0.5)(x)
-x = Dense(256, activation='relu',name='fc-2')(x)
-x = Dropout(0.5)(x)
-# a softmax layer for 4 classes
+input_shape = (150,150,3)
 num_classes = 2
-out = Dense(num_classes, activation='softmax',name='output_layer')(x)
 
-# this is the model we will train
-custom_resnet_model2 = Model(inputs=model.input, outputs=out)
 
-custom_resnet_model2.summary()
+model = mini_XCEPTION(input_shape, num_classes)
 
-for layer in custom_resnet_model2.layers[:-6]:
-	layer.trainable = False
+model.compile(loss='categorical_crossentropy',
+                optimizer='adam',
+                metrics=['accuracy'])
 
-custom_resnet_model2.layers[-1].trainable
-
-custom_resnet_model2.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+#model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
 
 t=time.time()
 class_weight = {0:1,1:23}
-hist = custom_resnet_model2.fit(imgs_d_train, final_label_train,class_weight = class_weight, batch_size=32, epochs=12, verbose=1, validation_data=(imgs_d_test, final_label_test))
+hist = model.fit(imgs_d_train, final_label_train,class_weight = class_weight, batch_size=32, epochs=12, verbose=1, validation_data=(imgs_d_test, final_label_test))
 print('Training time: %s' % (t - time.time()))
 (loss, accuracy) = custom_resnet_model2.evaluate(imgs_d_test, final_label_test, batch_size=10, verbose=1)
 
@@ -172,7 +155,7 @@ val_loss=hist.history['val_loss']
 train_acc=hist.history['acc']
 val_acc=hist.history['val_acc']
 
-file = open('/home/ubuntu/BTP_git3/vgg.txt','a')
+file = open('/home/ubuntu/BTP_git3/test123.txt','a')
 file.write(str(train_loss))
 file.write("\n\n\n\n\n\n")
 file.write(str(val_loss))
@@ -182,4 +165,4 @@ file.write("\n\n\n\n\n\n")
 file.write(str(val_acc))
 file.write("\n\n\n\n\n\n")
 file.close()
-model.save_weights("/home/ubuntu/BTP_git3/weights/vgg/model.h5")
+model.save_weights("/home/ubuntu/BTP_git3/weights/test123/model.h5")
