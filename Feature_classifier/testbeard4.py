@@ -20,8 +20,8 @@ for ite in range(20):
 
   data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
   data_train = sorted(data_raw)[ite*100:100 + ite*100]
-  data_test = sorted(data_raw)[200000:2000599]
-
+  data_test = sorted(data_raw)[200000:200599]
+  print len(data_test)
 
   label_file = open('list_attr_celeba.txt','r')
   labels_train = []
@@ -51,7 +51,7 @@ for ite in range(20):
 
 
 
-  labels_test = labels_test[200002:202601]
+  labels_test = labels_test[200002:200601]
   labels_test_genders = [int(i[21]) for i in labels_test]
   labels_test_moustaches = [int(i[23]) for i in labels_test]
   labels_test_glasss = [int(i[16]) for i in labels_test]
@@ -75,7 +75,7 @@ for ite in range(20):
   for i,v in enumerate(labels_train_gender):
 
     if labels_train_no_beard[i] == 0:
-
+      print i
       final_label_train.append([0,1])
       final_label_train.append([0,1])
     
@@ -154,11 +154,11 @@ for ite in range(20):
   input_shape = (150,150,3)
   num_classes = 2
 
-  file = open('/home/ubuntu/BTP_git3/logbeard4.txt','a')
+  file = open('/home/psycholearner/projects/BTP_git3/logbeard4.txt','a')
 
   model = mini_XCEPTION(input_shape, num_classes)
   if ite:
-    model.load_weights("/home/ubuntu/BTP_git3/weights/testbeard4/"+"model_%d.h5"%(ite-1))
+    model.load_weights("/home/psycholearner/projects/BTP_git3/weights/testbeard4/"+"model_%d.h5"%(ite-1))
   model.compile(loss='binary_crossentropy',
                 optimizer='adam',
                 metrics=['accuracy'])
@@ -167,11 +167,12 @@ for ite in range(20):
   #final_label_train = final_label_train[s]
   #imgs_d_train = imgs_d_train[s]
 
-  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
+  class_weight = {0:1,1:100}
+  model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5,class_weight = class_weight)
 
   test_acc = model.evaluate(imgs_d_test,final_label_test)
   print(test_acc)
   file.write("iter"+ str(ite) + "\n")
   file.write("acc"+str(test_acc)+ "\n")
   file.write("*****************"+ "\n")
-  model.save_weights("/home/ubuntu/BTP_git3/weights/testbeard4/"+"model_%d.h5"%ite)
+  model.save_weights("/home/psycholearner/projects/BTP_git3/weights/testbeard4/"+"model_%d.h5"%ite)
