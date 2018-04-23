@@ -11,7 +11,7 @@ from keras.layers import GlobalAveragePooling2D, Dense, Dropout,Activation,Flatt
 from keras.models import Model
 import time
 from align import detect_face
-from models.cnn import mini_XCEPTION
+from models.cnn import *
 import numpy as np
 
 
@@ -22,7 +22,7 @@ print("iteration numeber",ite)
 print("*************************************")
 
 data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
-data_train = sorted(data_raw)[0:200000]
+data_train = sorted(data_raw)[0:200]
 data_test = sorted(data_raw)[200000:202599]
 
 label_file = open('list_attr_celeba.txt','r')
@@ -34,7 +34,7 @@ for lines in label_file:
 	labels_train.append(label)
 	labels_test.append(label)
 
-labels_train = labels_train[2:200002]
+labels_train = labels_train[2:202]
 labels_train_gender = [int(i[21]) for i in labels_train]
 labels_train_moustache = [int(i[23]) for i in labels_train]
 labels_train_glass = [int(i[16]) for i in labels_train]
@@ -107,6 +107,7 @@ imgs_train = []
 
 for i,v in enumerate(data_train):
 
+	print(v)
 	img = cv2.imread(v)
 	if labels_train_moustache[i] == 1: 
 	  
@@ -134,7 +135,7 @@ input_shape = (150,150,3)
 num_classes = 2
 
 
-model = simpler_CNN(input_shape, num_classes)
+model = simple_CNN(input_shape, num_classes)
 
 model.compile(loss='categorical_crossentropy',
                 optimizer='adam',
@@ -146,7 +147,7 @@ t=time.time()
 s = np.arange(final_label_train.shape[0])
 final_label_train = final_label_train[s]
 imgs_d_train = imgs_d_train[s]
-hist = model.fit(imgs_d_train, final_label_train, batch_size=32, epochs=12, verbose=1, validation_data=(imgs_d_test, final_label_test))
+hist = model.fit(imgs_d_train, final_label_train, batch_size=32, epochs=1, verbose=1, validation_data=(imgs_d_test, final_label_test))
 print('Training time: %s' % (t - time.time()))
 (loss, accuracy) = model.evaluate(imgs_d_test, final_label_test, batch_size=10, verbose=1)
 
