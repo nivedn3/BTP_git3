@@ -77,10 +77,13 @@ final_label_train = []
 for i,v in enumerate(labels_train_gender):
 
 	if labels_train_moustache[i] == 1:
-	  for i in range(22):
-	  	final_label_train.append([1,0])
-	  final_label_train.append([1,0])
 
+	  final_label_train.append([1,0])
+	  final_label_train.append([1,0])
+	  final_label_train.append([1,0])
+	  final_label_train.append([1,0])
+	  final_label_train.append([1,0])
+	  final_label_train.append([1,0])
 	else:
 
 	  final_label_train.append([0,1])
@@ -110,10 +113,18 @@ for i,v in enumerate(data_train):
 	print(v)
 	img = cv2.imread(v)
 	if labels_train_moustache[i] == 1: 
-	  
+	  t = img.shape
+	  crp = img[0:t[0]*4/5,0:t[1]*4/5]
+	  crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
+	  crp3 = img[0:t[0],0:t[1]*4/5]
+	  crp4 = img[0:t[0]*4/5,0:t[1]]
+	  crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
 	  flip = cv2.flip(src=img, flipCode=1)
-	  for i in range(22):
-	  	imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
+	  imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
+      imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
 	  imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
 
 	else:
@@ -158,7 +169,7 @@ val_loss=hist.history['val_loss']
 train_acc=hist.history['acc']
 val_acc=hist.history['val_acc']
 
-file = open('/home/ubuntu/BTP_git3/test123cnn.txt','a')
+file = open('/home/ubuntu/BTP_git3/test123aug.txt','a')
 file.write(str(train_loss))
 file.write("\n\n\n\n\n\n")
 file.write(str(val_loss))
@@ -168,4 +179,4 @@ file.write("\n\n\n\n\n\n")
 file.write(str(val_acc))
 file.write("\n\n\n\n\n\n")
 file.close()
-model.save_weights("/home/ubuntu/BTP_git3/weights/test123cnn/model.h5")
+model.save_weights("/home/ubuntu/BTP_git3/weights/test123aug/model.h5")
