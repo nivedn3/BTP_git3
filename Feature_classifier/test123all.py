@@ -77,6 +77,7 @@ labels_test_no_beards[labels_test_no_beards < 0] = 0
 final_label_train = []
   for i,v in enumerate(labels_train_gender):
 
+  	for i in range(7):
       final_label_train.append([labels_train_gender[i],labels_train_moustache[i],labels_train_no_beard[i]])
 
   final_label_train = np.array(final_label_train)
@@ -85,6 +86,7 @@ final_label_train = []
   final_label_test = []
   for i,v in enumerate(labels_test_genders):
 
+  	for i in range(7):
       final_label_test.append([labels_test_genders[i],labels_test_moustaches[i],labels_test_no_beards[i]])
 
   final_label_test = np.array(final_label_test)
@@ -127,20 +129,41 @@ final_label_test = np.array(final_label_test)
 imgs_train = []
 
 for i in data_train:
-
 	img = cv2.imread(i)
+	t = img.shape
+	crp = img[0:t[0]*4/5,0:t[1]*4/5]
+	crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
+	crp3 = img[0:t[0],0:t[1]*4/5]
+	crp4 = img[0:t[0]*4/5,0:t[1]]
+	crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
+	flip = cv2.flip(src=img, flipCode=1)
+	imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
 	imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
-
 imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
 
 
 imgs_test = []
-
 for i in data_test:
-
 	img = cv2.imread(i)
+	t = img.shape
+	crp = img[0:t[0]*4/5,0:t[1]*4/5]
+	crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
+	crp3 = img[0:t[0],0:t[1]*4/5]
+	crp4 = img[0:t[0]*4/5,0:t[1]]
+	crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
+	flip = cv2.flip(src=img, flipCode=1)
+	imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
+	imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
 	imgs_test.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
-
 imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
 
 '''
