@@ -222,8 +222,6 @@ imgs_d_train = imgs_d_train[s]
 class_weight = class_weight.compute_class_weight('balanced', np.unique(final_label_train), final_label_train)
 
 
-
-
 hist = model.fit(imgs_d_train, final_label_train, batch_size=32, epochs=1, verbose=1, validation_data=(imgs_d_test, final_label_test))
 print('Training time: %s' % (t - time.time()))
 (loss, accuracy) = model.evaluate(imgs_d_test, final_label_test, batch_size=10, verbose=1)
