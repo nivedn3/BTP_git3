@@ -2,8 +2,8 @@ from keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
 from keras.callbacks import ReduceLROnPlateau
 from utils.datasets import DataManager
 from models.cnn import mini_XCEPTION
-from utils.data_augmentation import ImageGenerator
-from utils.datasets import split_imdb_data
+from data_augmentation import ImageGenerator
+from datasets import split_imdb_data
 
 # parameters
 batch_size = 32
@@ -16,9 +16,9 @@ dataset_name = 'imdb'
 input_shape = (64, 64, 1)
 if input_shape[2] == 1:
     grayscale = True
-images_path = '../datasets/imdb_crop/'
-log_file_path = '../trained_models/gender_models/gender_training.log'
-trained_models_path = '../trained_models/gender_models/gender_mini_XCEPTION'
+images_path = '/home/ubuntu/imdb_crop/'
+log_file_path = '/home/ubuntu/gender_training.log'
+trained_models_path = '/home/ubuntu/gender_mini_XCEPTION'
 
 # data loader
 data_loader = DataManager(dataset_name)
