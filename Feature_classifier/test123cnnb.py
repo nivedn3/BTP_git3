@@ -79,17 +79,17 @@ labels_test_no_beards[labels_test_no_beards < 0] = 0
 final_label_train = []
 for i,v in enumerate(labels_train_gender):
 
-	if labels_train_moustache[i] == 1:
+	if labels_train_no_beard[i] == 0:
 
-	  final_label_train.append([1,0])
-	  final_label_train.append([1,0])
+	  final_label_train.append([0,1])
+	  final_label_train.append([0,1])
 	  #final_label_train.append([1,0])
 	  #final_label_train.append([1,0])
 	  #final_label_train.append([1,0])
 	  #final_label_train.append([1,0])
 	else:
 
-	  final_label_train.append([0,1])
+	  final_label_train.append([1,0])
 
 
 final_label_train = np.array(final_label_train)
@@ -98,7 +98,7 @@ final_label_train = np.array(final_label_train)
 final_label_test = []
 for i,v in enumerate(labels_test_genders):
 
-	if labels_test_moustaches[i] == 1:
+	if labels_test_no_beards[i] == 1:
 
 	  final_label_test.append([1,0])
 
@@ -115,7 +115,7 @@ for i,v in enumerate(data_train):
 
 	print(v)
 	img = cv2.imread(v,cv2.IMREAD_GRAYSCALE)
-	if labels_train_moustache[i] == 1:
+	if labels_train_no_beard[i] == 0:
 	  t = img.shape
 	  crp = img[0:t[0]*4/5,0:t[1]*4/5]
 	  crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
@@ -137,15 +137,17 @@ for i,v in enumerate(data_train):
 
 imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
 
+imgs_d_train = imgs_d_train.reshape(imgs_d_train.shape[0],imgs_d_train.shape[1],imgs_d_train[2],1)
+
 imgs_test = []
 for i in data_test:
   img = cv2.imread(v,cv2.IMREAD_GRAYSCALE)
   imgs_test.append(np.expand_dims(cv2.resize(img,(64,64)),axis = 0).astype(np.float32))
 imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
+imgs_d_test = imgs_d_test.reshape(imgs_d_test.shape[0],imgs_d_test.shape[1],imgs_d_test.shape[2],1)
 
 input_shape = (64, 64, 1)
 num_classes = 2
-
 
 model = mini_XCEPTION(input_shape, num_classes)
 
@@ -211,7 +213,7 @@ val_loss=hist.history['val_loss']
 train_acc=hist.history['acc']
 val_acc=hist.history['val_acc']
 
-file = open('/home/ubuntu/BTP_git3/genderpre.txt','a')
+file = open('/home/ubuntu/BTP_git3/genderpreb.txt','a')
 file.write(str(train_loss))
 file.write("\n\n\n\n\n\n")
 file.write(str(val_loss))
@@ -221,4 +223,4 @@ file.write("\n\n\n\n\n\n")
 file.write(str(val_acc))
 file.write("\n\n\n\n\n\n")
 file.close()
-model.save_weights("/home/ubuntu/BTP_git3/weights/genderpre/model.h5")
+model.save_weights("/home/ubuntu/BTP_git3/weights/genderpreb/model.h5")
