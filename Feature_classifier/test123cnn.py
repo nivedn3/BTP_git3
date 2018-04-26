@@ -25,7 +25,7 @@ print("iteration numeber",ite)
 print("*************************************")
 
 data_raw = glob(os.path.join('/home/psycholearner/projects/DCGAN-tensorflow/data/celebA','*.jpg'))
-data_train = sorted(data_raw)[0:200]
+data_train = sorted(data_raw)[0:170]
 data_test = sorted(data_raw)[200000:202599]
 
 label_file = open('list_attr_celeba.txt','r')
@@ -37,7 +37,7 @@ for lines in label_file:
 	labels_train.append(label)
 	labels_test.append(label)
 
-labels_train = labels_train[2:202]
+labels_train = labels_train[2:172]
 labels_train_gender = [int(i[21]) for i in labels_train]
 labels_train_moustache = [int(i[23]) for i in labels_train]
 labels_train_glass = [int(i[16]) for i in labels_train]
@@ -83,10 +83,10 @@ for i,v in enumerate(labels_train_gender):
 
 	  final_label_train.append([1,0])
 	  final_label_train.append([1,0])
-	  final_label_train.append([1,0])
-	  final_label_train.append([1,0])
-	  final_label_train.append([1,0])
-	  final_label_train.append([1,0])
+	  #final_label_train.append([1,0])
+	  #final_label_train.append([1,0])
+	  #final_label_train.append([1,0])
+	  #final_label_train.append([1,0])
 	else:
 
 	  final_label_train.append([0,1])
@@ -114,8 +114,8 @@ imgs_train = []
 for i,v in enumerate(data_train):
 
 	print(v)
-	img = cv2.imread(v)
-	if labels_train_moustache[i] == 1: 
+	img = cv2.imread(v,cv2.IMREAD_GRAYSCALE)
+	if labels_train_moustache[i] == 1:
 	  t = img.shape
 	  crp = img[0:t[0]*4/5,0:t[1]*4/5]
 	  crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
@@ -123,39 +123,75 @@ for i,v in enumerate(data_train):
 	  crp4 = img[0:t[0]*4/5,0:t[1]]
 	  crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
 	  flip = cv2.flip(src=img, flipCode=1)
-	  imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
-      imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
-	  imgs_train.append(np.expand_dims(cv2.resize(flip,(150,150)),axis = 0).astype(np.float32))
+	  #imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp3,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp4,(150,150)),axis = 0).astype(np.float32))
+      #imgs_train.append(np.expand_dims(cv2.resize(crp5,(150,150)),axis = 0).astype(np.float32))
+	  imgs_train.append(np.expand_dims(cv2.resize(flip,(64,64)),axis = 0).astype(np.float32))
+	  imgs_train.append(np.expand_dims(cv2.resize(img,(64,64)),axis = 0).astype(np.float32))
 
 	else:
 
-	  imgs_train.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
+	  imgs_train.append(np.expand_dims(cv2.resize(img,(64,64)),axis = 0).astype(np.float32))
 
 imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
 
 imgs_test = []
-
 for i in data_test:
-
-  img = cv2.imread(v)
-  imgs_test.append(np.expand_dims(cv2.resize(img,(150,150)),axis = 0).astype(np.float32))
-
+  img = cv2.imread(v,cv2.IMREAD_GRAYSCALE)
+  imgs_test.append(np.expand_dims(cv2.resize(img,(64,64)),axis = 0).astype(np.float32))
 imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
 
-input_shape = (150,150,3)
+input_shape = (64, 64, 1)
 num_classes = 2
 
 
-model = simple_CNN(input_shape, num_classes)
+model = mini_XCEPTION(input_shape, num_classes)
 
-model.compile(loss='categorical_crossentropy',
-                optimizer='adam',
-                metrics=['accuracy'])
+
 
 #model.fit(imgs_d_train,final_label_train, batch_size = 64, epochs=5)
+
+regularization = l2(0.01)
+
+
+model.load_weights('/home/ubuntu/face_classification/trained_models/gender_models/gender_mini_XCEPTION.22-0.96.hdf5')
+
+model.layers.pop()
+model.layers.pop()
+model.layers.pop()
+residual = Conv2D(256, (1, 1), strides=(2, 2),
+                      padding='same', use_bias=False)(model.layers[-1].output)
+residual = BatchNormalization()(residual)
+
+x = SeparableConv2D(256, (3, 3), padding='same',
+                        kernel_regularizer=regularization,
+                        use_bias=False)(model.layers[-1].output)
+x = BatchNormalization()(x)
+x = Activation('relu')(x)
+x = SeparableConv2D(256, (3, 3), padding='same',
+                        kernel_regularizer=regularization,
+                        use_bias=False)(x)
+x = BatchNormalization()(x)
+x = MaxPooling2D((3, 3), strides=(2, 2), padding='same')(x)
+x = layers.add([x, residual])
+
+x = Conv2D(num_classes, (3, 3),
+            #kernel_regularizer=regularization,
+            padding='same')(x)
+x = GlobalAveragePooling2D()(x)
+
+output = Activation('softmax',name='predictions')(x)
+
+model2 = Model(model.input, output)
+
+for layer in model.layers:
+	layer.trainable = False
+
+model2.compile(loss='categorical_crossentropy',
+                optimizer='adam',
+                metrics=['accuracy'])
 
 t=time.time()
 s = np.arange(final_label_train.shape[0])
@@ -163,9 +199,6 @@ final_label_train = final_label_train[s]
 imgs_d_train = imgs_d_train[s]
 
 class_weight = class_weight.compute_class_weight('balanced', np.unique(final_label_train), final_label_train)
-
-
-
 
 hist = model.fit(imgs_d_train, final_label_train,class_weight=class_weight, batch_size=32, epochs=1, verbose=1, validation_data=(imgs_d_test, final_label_test))
 print('Training time: %s' % (t - time.time()))
@@ -178,7 +211,7 @@ val_loss=hist.history['val_loss']
 train_acc=hist.history['acc']
 val_acc=hist.history['val_acc']
 
-file = open('/home/ubuntu/BTP_git3/test123aug.txt','a')
+file = open('/home/ubuntu/BTP_git3/genderpre.txt','a')
 file.write(str(train_loss))
 file.write("\n\n\n\n\n\n")
 file.write(str(val_loss))
@@ -188,4 +221,4 @@ file.write("\n\n\n\n\n\n")
 file.write(str(val_acc))
 file.write("\n\n\n\n\n\n")
 file.close()
-model.save_weights("/home/ubuntu/BTP_git3/weights/test123aug/model.h5")
+model.save_weights("/home/ubuntu/BTP_git3/weights/genderpre/model.h5")
