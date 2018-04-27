@@ -117,11 +117,11 @@ for i,v in enumerate(data_train):
 	img = cv2.imread(v,cv2.IMREAD_GRAYSCALE)
 	if labels_train_moustache[i] == 1:
 	  t = img.shape
-	  crp = img[0:t[0]*4/5,0:t[1]*4/5]
-	  crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
-	  crp3 = img[0:t[0],0:t[1]*4/5]
-	  crp4 = img[0:t[0]*4/5,0:t[1]]
-	  crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
+	  #crp = img[0:t[0]*4/5,0:t[1]*4/5]
+	  #crp2 = img[t[0]*1/5:t[0],t[1]*1/5:t[1]]
+	  #crp3 = img[0:t[0],0:t[1]*4/5]
+	  #crp4 = img[0:t[0]*4/5,0:t[1]]
+	  #crp5 = img[t[0]*1/5:t[0]*4/5,t[1]*1/5:t[1]*4/5]
 	  flip = cv2.flip(src=img, flipCode=1)
 	  #imgs_train.append(np.expand_dims(cv2.resize(crp,(150,150)),axis = 0).astype(np.float32))
       #imgs_train.append(np.expand_dims(cv2.resize(crp2,(150,150)),axis = 0).astype(np.float32))
@@ -136,12 +136,15 @@ for i,v in enumerate(data_train):
 	  imgs_train.append(np.expand_dims(cv2.resize(img,(64,64)),axis = 0).astype(np.float32))
 
 imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
+imgs_d_train = imgs_d_train.reshape(imgs_d_train.shape[0],imgs_d_train.shape[1],imgs_d_train[2],1)
+
 
 imgs_test = []
 for i in data_test:
   img = cv2.imread(v,cv2.IMREAD_GRAYSCALE)
   imgs_test.append(np.expand_dims(cv2.resize(img,(64,64)),axis = 0).astype(np.float32))
 imgs_d_test = np.concatenate(imgs_test, axis=0).astype(np.float32)
+imgs_d_test = imgs_d_test.reshape(imgs_d_test.shape[0],imgs_d_test.shape[1],imgs_d_test.shape[2],1)
 
 input_shape = (64, 64, 1)
 num_classes = 2
