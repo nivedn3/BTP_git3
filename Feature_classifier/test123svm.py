@@ -180,16 +180,25 @@ x = layers.add([x, residual])
 x = Conv2D(num_classes, (3, 3),
             #kernel_regularizer=regularization,
             padding='same')(x)
-x = GlobalAveragePooling2D()(x)
+x = MaxPooling2D((2,2))(x)
 
-output = Activation('softmax',name='predictions')(x)
+x = Flatten()(x)
+
+
+x = Dense(512, activation='relu',name='fc-1')(x)
+
+x = Dropout(0.5)(x)
+
+output = Dense(num_classes,activation = 'linear',kernel_regularizer = regularization)(x)
+
+#output = Activation('softmax',name='predictions')(x)
 
 model2 = Model(model.input, output)
 
 for layer in model.layers:
 	layer.trainable = False
 
-model2.compile(loss='categorical_crossentropy',
+model2.compile(loss='hinge',
                 optimizer='adam',
                 metrics=['accuracy'])
 
