@@ -136,7 +136,7 @@ for i,v in enumerate(data_train):
 	  imgs_train.append(np.expand_dims(cv2.resize(img,(64,64)),axis = 0).astype(np.float32))
 
 imgs_d_train = np.concatenate(imgs_train, axis=0).astype(np.float32)
-imgs_d_train = imgs_d_train.reshape(imgs_d_train.shape[0],imgs_d_train.shape[1],imgs_d_train[2],1)
+imgs_d_train = imgs_d_train.reshape(imgs_d_train.shape[0],imgs_d_train.shape[1],imgs_d_train.shape[2],1)
 
 
 imgs_test = []
